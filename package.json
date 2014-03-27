@@ -1,0 +1,9 @@
+{
+  "name": "SimpleHTTPSServer",
+  "description": "simple https server for iOS 7.1",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.x"
+  }
+}

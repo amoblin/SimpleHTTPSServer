@@ -1,0 +1,18 @@
+#+TITLE: README
+#+AUTHOR: amoblin
+#+EMAIL: amoblin@gmail.com
+#+DATE: 2014-03-27 14:32:48
+#+OPTIONS: ^:{}
+
+* Simple Https Server
+
+For iOS 7.1
+
+* Usage
+
+#+BEGIN_SRC 
+
+npm install
+sudo node app.js
+
+#+END_SRC
