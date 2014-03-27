@@ -8,11 +8,20 @@
 
 For iOS 7.1
 
-* Usage
+* HTTP Usage
 
 #+BEGIN_SRC 
 
-npm install
-sudo node app.js
+$ npm install
+$ node app.js
+
+#+END_SRC
+* HTTPS Usage
+
+#+BEGIN_SRC 
+
+$ npm install
+$ sh generateCert.sh www.mofunenglish.com
+$ sudo node app.js
 
 #+END_SRC
