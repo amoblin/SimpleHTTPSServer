@@ -21,7 +21,7 @@ $ node app.js
 #+BEGIN_SRC 
 
 $ npm install
-$ sh generateCert.sh www.mofunenglish.com
+$ sh generateCert.sh "https域名"
 $ sudo node app.js
 
 #+END_SRC
