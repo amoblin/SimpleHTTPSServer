@@ -21,4 +21,5 @@ openssl req -new -out server.csr -key server.key -subj /CN=${domain}
 openssl x509 -req -in server.csr -out server.cer -CAkey customCA.key -CA customCA.cer -days 365 -CAcreateserial -CAserial serial
 
 # distribute customCA
+mkdir public
 cp customCA.cer public

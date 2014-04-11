@@ -28,12 +28,13 @@ html
       }
   body
     h1 #{revision}
-    a(href="./customCA.cer")
-      div 安装证书
-    br
-    a(href="itms-services://?action=download-manifest&amp;url=https://192.168.0.120/mofunshow.plist")
-      div 点击安装[https]
-    br
-    a(href="itms-services://?action=download-manifest&amp;url=http://192.168.0.120:2308/mofunshow.plist")
-      div 点击安装[http]
+    if version
+      a(href="./customCA.cer")
+        div 安装证书
+      br
+      a(href="itms-services://?action=download-manifest&amp;url=https://192.168.0.120/mofunshow.plist")
+        div 点击安装[https]
+    else
+      a(href="itms-services://?action=download-manifest&amp;url=http://192.168.0.120:2308/mofunshow_http.plist")
+        div 点击安装[http]
     br
