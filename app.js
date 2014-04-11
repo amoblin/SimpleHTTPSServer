@@ -9,6 +9,7 @@ var http = require('http');
 var https = require('https');
 var express = require('express');
 var semver = require('semver');
+var path = require('path');
 
 // ssl
 var fs = require('fs');
@@ -45,13 +46,29 @@ var getClientInfo = function(req) {
 }
 
 app.get('/', function(req, res) {
-    var iosVersion = getClientInfo(req).iOS;
+    var iosVersion = getClientInfo(req).iOS || "7.1";
     if (iosVersion.length == 3) {
 	iosVersion += ".0";
     }
     config.version = semver.gte(iosVersion, '7.1.0');
+    if (config.version) {
+	config.plists = getPlists("public");
+    } else {
+	config.plists = getPlists("public/http");
+    }
     res.render('index', config);
 });
+
+var getPlists = function(dir) {
+    var fs = require('fs');
+    var files = [];
+    fs.readdirSync(dir).forEach(function(item) {
+	if (path.extname(item) == ".plist") {
+	    files.push(path.basename(item, ".plist"));
+	}
+    });
+    return files;
+}
 
 var httpServer = http.createServer(app);
 httpServer.listen(2308);

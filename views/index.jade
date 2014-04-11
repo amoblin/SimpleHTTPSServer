@@ -32,9 +32,11 @@ html
       a(href="./customCA.cer")
         div 安装证书
       br
-      a(href="itms-services://?action=download-manifest&amp;url=https://192.168.0.120/mofunshow.plist")
-        div 点击安装[https]
+      - each item in plists
+        a(href="itms-services://?action=download-manifest&amp;url=https://192.168.0.120/#{item}.plist")
+          div 点击安装[#{item}]
     else
-      a(href="itms-services://?action=download-manifest&amp;url=http://192.168.0.120:2308/mofunshow_http.plist")
-        div 点击安装[http]
+      - each item in plists
+        a(href="itms-services://?action=download-manifest&amp;url=http://192.168.0.120:2308/#{item}.plist")
+          div 点击安装[#{item}]
     br
