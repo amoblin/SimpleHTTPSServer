@@ -6,7 +6,8 @@ html
     style.
       body {
         text-align:center;
-        padding-top: 60px;
+        padding-top: 20px;
+        background-color: #eee;
       }
       h1 {
        font-size: 60px;
@@ -27,16 +28,17 @@ html
        border-radius: 4px;
       }
   body
-    h1 #{revision}
+    h3 英语魔方秀内测版
     if version
       a(href="./customCA.cer")
-        div 安装证书
+        div 刚才有提示框?安装证书来搞定
       br
       - each item in plists
         a(href="itms-services://?action=download-manifest&amp;url=https://192.168.0.120/#{item}.plist")
           div 点击安装[#{item}]
+        br
     else
       - each item in plists
-        a(href="itms-services://?action=download-manifest&amp;url=http://192.168.0.120:2308/#{item}.plist")
+        a(href="itms-services://?action=download-manifest&amp;url=http://192.168.0.120:2308/http/#{item}.plist")
           div 点击安装[#{item}]
-    br
+        br
