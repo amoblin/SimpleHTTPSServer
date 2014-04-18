@@ -46,15 +46,17 @@ var getClientInfo = function(req) {
 }
 
 app.get('/', function(req, res) {
-    var iosVersion = getClientInfo(req).iOS || "7.1";
+    var iosVersion = getClientInfo(req).iOS || "7.0";
     if (iosVersion.length == 3) {
 	iosVersion += ".0";
     }
     config.version = semver.gte(iosVersion, '7.1.0');
     if (config.version) {
 	config.plists = getPlists("public");
+	config.urlRoot = "https://192.168.0.120/"
     } else {
 	config.plists = getPlists("public/http");
+	config.urlRoot = "http://192.168.0.120:2308/http/"
     }
     res.render('index', config);
 });

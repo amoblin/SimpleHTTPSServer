@@ -3,42 +3,21 @@ html
   head
     meta(name="viewport", content="width=320, initial-scale=1.0, user-scalable=no")
     title=title
-    style.
-      body {
-        text-align:center;
-        padding-top: 20px;
-        background-color: #eee;
-      }
-      h1 {
-       font-size: 60px;
-      }
-      a {
-       margin-top:40px;
-       text-align:center;
-       text-decoration:none;
-      }
-      a div {
-       width: 100%;
-       height: 50px;
-       line-height:50px;
-       text-align: center;
-       background-color: #22ac38;
-       font-size: 22px;
-       color: white;
-       border-radius: 4px;
-      }
+    link(rel='stylesheet', href='main.css')
   body
     h3 英语魔方秀内测版
     if version
       a(href="./customCA.cer")
         div 刚才有提示框?安装证书来搞定
       br
+    a(href="itms-services://?action=download-manifest&amp;url=#{urlRoot}#{plists[plists.length-1]}.plist")
+      div 安装最新版[#{plists[plists.length-1]}]
+    br
+    #list.list
+      hr
       - each item in plists
-        a(href="itms-services://?action=download-manifest&amp;url=https://192.168.0.120/#{item}.plist")
+        a.item(href="itms-services://?action=download-manifest&amp;url=#{urlRoot}#{item}.plist")
           div 点击安装[#{item}]
         br
-    else
-      - each item in plists
-        a(href="itms-services://?action=download-manifest&amp;url=http://192.168.0.120:2308/http/#{item}.plist")
-          div 点击安装[#{item}]
-        br
+  a(href="javascript:document.getElementById('list').style.display='block';")
+    | 显示全部
