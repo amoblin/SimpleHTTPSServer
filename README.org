@@ -25,3 +25,8 @@ $ sh generateCert.sh "https域名"
 $ sudo node app.js
 
 #+END_SRC
+* Python Simple Https Server
+#+BEGIN_SRC shell
+python main.py
+#+END_SRC
+
