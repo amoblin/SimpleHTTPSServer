@@ -1,0 +1,11 @@
+#!/bin/sh
+# author: amoblin <amoblin@gmail.com>
+# file name: post-receive
+# create date: 2014-04-18 11:38:29
+# This file is created from ~/.marboo/source/media/file_init/default.init.sh
+# 本文件由 ~/.marboo/source/media/file_init/default.init.sh　复制而来
+
+cd ~/websites || mkdir ~/websites && cd ~/websites
+cd app-dist || git clone ~/repositories/app-dist.git && exit
+cd app-dist; git pull
+

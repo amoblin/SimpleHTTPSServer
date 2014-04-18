@@ -6,9 +6,11 @@
 # This file is created from ~/.marboo/source/media/file_init/default.init.py
 # 本文件由 ~/.marboo/source/media/file_init/default.init.py 复制而来
 
+import os
 import BaseHTTPServer, SimpleHTTPServer
 import ssl
 
+os.chdir("public")
 httpd = BaseHTTPServer.HTTPServer(('localhost', 443), SimpleHTTPServer.SimpleHTTPRequestHandler)
-httpd.socket = ssl.wrap_socket (httpd.socket, certfile='server.cer', keyfile="server.key", server_side=True)
+httpd.socket = ssl.wrap_socket(httpd.socket, certfile='../server.cer', keyfile="../server.key", server_side=True)
 httpd.serve_forever()
