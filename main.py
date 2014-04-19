@@ -11,6 +11,6 @@ import BaseHTTPServer, SimpleHTTPServer
 import ssl
 
 os.chdir("public")
-httpd = BaseHTTPServer.HTTPServer(('', 443), SimpleHTTPServer.SimpleHTTPRequestHandler)
+httpd = BaseHTTPServer.HTTPServer(('', 4443), SimpleHTTPServer.SimpleHTTPRequestHandler)
 httpd.socket = ssl.wrap_socket(httpd.socket, certfile='../server.cer', keyfile="../server.key", server_side=True)
 httpd.serve_forever()
