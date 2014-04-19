@@ -1,0 +1,36 @@
+doctype html
+html
+  head
+    meta(name="viewport", content="width=320, initial-scale=1.0, user-scalable=no", charset='utf-8')
+    title=title
+    link(rel="stylesheet", href="/main.css")
+  body
+    h3=title
+    #https
+      a(href="./customCA.cer")
+        div 刚才有提示框?安装证书来搞定
+      br
+      a(href="itms-services://?action=download-manifest&amp;url=#{urlRoot}/#{plists[plists.length-1]}.plist")
+        div 安装最新版[#{plists[plists.length-1]}]
+      br
+      #httpsList.list
+        hr
+        - each item in plists
+          a.item(href="itms-services://?action=download-manifest&amp;url=#{urlRoot}/#{item}.plist")
+            div 点击安装[#{item}]
+          br
+      a(href="javascript:document.getElementById('httpsList').style.display='block';")
+        | 显示全部
+    #http(style="display:none")
+      a(href="itms-services://?action=download-manifest&amp;url=#{httpRoot}/#{plists[plists.length-1]}.plist")
+        div 安装最新版[#{plists[plists.length-1]}]
+      br
+      #httpList.list
+        hr
+        - each item in plists
+          a.item(href="itms-services://?action=download-manifest&amp;url=#{httpRoot}/#{item}.plist")
+            div 点击安装[#{item}]
+          br
+      a(href="javascript:document.getElementById('httpList').style.display='block';")
+        | 显示全部
+    script(type="text/javascript" src="/main.js")
