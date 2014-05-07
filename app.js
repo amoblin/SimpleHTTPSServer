@@ -53,10 +53,10 @@ app.get('/', function(req, res) {
     config.version = semver.gte(iosVersion, '7.1.0');
     if (config.version) {
 	config.plists = getPlists("public");
-	config.urlRoot = "https://192.168.0.120/"
+	config.urlRoot = URLROOT;
     } else {
 	config.plists = getPlists("public/http");
-	config.urlRoot = "http://192.168.0.120:2308/http/"
+	config.urlRoot = HTTPURLROOT;
     }
     res.render('index', config);
 });
