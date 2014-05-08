@@ -72,6 +72,10 @@ var getPlists = function(dir) {
 	    files.push(path.basename(item, ".plist"));
 	}
     });
+    files.sort(function(a, b) {
+        return fs.statSync(dir + "/" + b + ".plist").mtime.getTime() -
+            fs.statSync(dir + "/" + a  + ".plist").mtime.getTime();
+    });
     return files;
 }
 
