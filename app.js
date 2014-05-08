@@ -2,7 +2,10 @@
 
 var config = {
     "name": "English Mofunshow",
-    "revision": "r741"
+    "title": "英语魔方秀内测版",
+    "revision": "r741",
+    "root": "https://www.domain.name:4443/",
+    "httpRoot": "https://www.domain.name:4443/http/"
 };
 
 var http = require('http');
@@ -46,17 +49,17 @@ var getClientInfo = function(req) {
 }
 
 app.get('/', function(req, res) {
-    var iosVersion = getClientInfo(req).iOS || "7.0";
+    var iosVersion = getClientInfo(req).iOS || "7.1";
     if (iosVersion.length == 3) {
 	iosVersion += ".0";
     }
     config.version = semver.gte(iosVersion, '7.1.0');
     if (config.version) {
 	config.plists = getPlists("public");
-	config.urlRoot = URLROOT;
+	config.urlRoot = config.root
     } else {
 	config.plists = getPlists("public/http");
-	config.urlRoot = HTTPURLROOT;
+	config.urlRoot = config.httpRoot
     }
     res.render('index', config);
 });
@@ -76,6 +79,6 @@ var httpServer = http.createServer(app);
 httpServer.listen(2308);
 
 var httpsServer = https.createServer(credentials, app);
-httpsServer.listen(443);
+httpsServer.listen(4443);
 
 console.log('It works');

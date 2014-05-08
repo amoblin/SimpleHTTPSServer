@@ -7,54 +7,58 @@ $ipaFile = "#{$projDir}/#{$name}.ipa"
 
 $templatePlistFile = "template.plist"
 
-$infoFile = "#{$projDir}/#{$name}/#{$name}-Info"
 $plistFile = "#{$projDir}/#{$name}.plist"
-$revision = `defaults read #{$infoFile} CFBundleVersion`.rstrip
-$bundleId = `defaults read #{$infoFile} CFBundleIdentifier`.rstrip
-
-$fileName = "%s_r%s" % [`date +%F`.rstrip, $revision]
 
 class Generator
   def plistFile
-    "%s/%s.plist" % [@baseDir, $fileName]
+    "%s/%s.plist" % [@baseDir, self.fileName]
   end
   def ipaFileDir
     @baseDir
   end
   def distIpaFile
-    "%s/%s.ipa" % [self.ipaFileDir, $fileName]
+    "%s/%s.ipa" % [self.ipaFileDir, self.fileName]
   end
   def ipaURL
-    "%s/%s.ipa" % [@baseURL, $fileName]
+    "%s/%s.ipa" % [@baseURL, self.fileName]
   end
 
   def httpBaseDir
     "%s/http" % @baseDir
   end
   def httpPlistFile
-    "%s/%s.plist" % [self.httpBaseDir, $fileName];
+    "%s/%s.plist" % [self.httpBaseDir, self.fileName];
   end
   def httpPlistURL
-    "%shttp\\/%s.plist" % [@httpBaseURL, $fileName];
+    "%s/http/%s.plist" % [@baseURL, self.fileName];
   end
   def httpIpaURL
-    "%s/%s.ipa" % [@httpBaseURL, $fileName];
+    "%s/%s.ipa" % [@baseURL, self.fileName];
+  end
+  def fileName
+    "%s_r%s" % [`date +%F`.rstrip, self.revision]
+  end
+  def revision
+    `defaults read #{@infoFile} CFBundleVersion`.rstrip
   end
 
   attr_accessor :name, :title
-  attr_accessor :baseURL, :baseDir, :httpBaseURL, :profile, :scheme, :signature
+  attr_accessor :baseURL, :baseDir, :profile, :scheme, :signature, :infoFile, :bundleId
 
   def initialize(name, title)
     @name = name
     @title = title
   end
-  def setBase(baseURL, baseDir, httpBaseURL, profile, scheme, signature)
+  def setBase(baseURL, baseDir, profile, scheme, signature)
     @profile = profile
     @baseURL = baseURL
     @baseDir = baseDir
-    @httpBaseURL = httpBaseURL
     @scheme = scheme
     @signature = signature
+
+    @infoFile = "#{$projDir}/#{@scheme}/#{@scheme}-Info"
+    @bundleId = `defaults read #{@infoFile} CFBundleIdentifier`.rstrip
+
   end
   def build
     cmd = "cd #{$projDir};xcodebuild -workspace #{$name}.xcworkspace -scheme #{@scheme} -configuration Release -sdk iphoneos7.1 -derivedDataPath . clean"
@@ -77,22 +81,27 @@ class Generator
     # !!!!!! first make sure code sing building setting for Release in Xcode is none
     #
     #################
+
     `cp -f #{$templatePlistFile} #{self.plistFile}`
     `sed -i .bak "s#\\#URL##{self.ipaURL}#" #{self.plistFile}`
-    `sed -i .bak "s#\\#bundleId##{$bundleId}#" #{self.plistFile}`
-    `sed -i .bak "s#\\#bundleVersion##{$revision}#" #{self.plistFile}`
-    `sed -i .bak "s#\\#title##{$revision}#" #{self.plistFile}`
+    `sed -i .bak "s#\\#bundleId##{@bundleId}#" #{self.plistFile}`
+    `sed -i .bak "s#\\#bundleVersion##{self.revision}#" #{self.plistFile}`
+    `sed -i .bak "s#\\#title##{self.revision}#" #{self.plistFile}`
     `rm -f #{self.plistFile}.bak`
     # for iOS version < 7.1
     File.directory?File.expand_path(self.httpBaseDir) or `mkdir #{self.httpBaseDir}`
     `sed "s##{self.ipaURL}##{self.httpIpaURL}#" #{self.plistFile} > #{self.httpPlistFile}`
   end
-  def generateHtml(root, httpRoot)
+  def generateHtml()
     require 'json'
     plists = Dir.entries(File.expand_path(self.baseDir)).select{|x| File.extname(x) == ".plist"}.map{|x| "%s" % File.basename(x, ".plist")}
-    params = {:urlRoot => "#{root}", :httpRoot => "#{httpRoot}", :plists => plists, :title => "#{@title}", :version => true}
+    params = {:urlRoot => "#{@baseURL}", :httpRoot => "#{@baseURL}", :plists => plists, :title => "#{@title}", :version => true}
     `jade --pretty --obj '#{params.to_json}' index.jade -o #{self.baseDir}`
   end
+  def push()
+    `cd #{@baseDir};git add -A;git commit -m "r#{self.revision} released"`
+  end
+
 end
 
 generator = Generator.new $name, $title
@@ -104,46 +113,38 @@ task :default do |t|
   puts `git log --pretty=oneline|wc -l`
 end
 
-task :test do |t|
-  @a = "http://a.b.c"
-  puts `sed "s#a##{@a}#g" a.txt`
-end
-
 task :dist do
   # Local URL
   #baseURL = "https://dist.marboo.biz/k2k/"
   baseURL = "https://192.168.0.166:4443"
   @baseDir = "/Users/amoblin/Dropbox/Apps/Marboo/Projects/MyProjects/app-dist/public/"
-  httpBaseURL = "http://192.168.0.166:2308"
   profile = "#{$projDir}/EnglishMofunShow_DEV.mobileprovision"
   signature = "iPhone Developer: Cui Guilin (CF3AN73YM2)"
 
-  generator.setBase(baseURL, @baseDir, httpBaseURL, profile, $name, signature)
+  generator.setBase(baseURL, @baseDir, profile, $name, signature)
 
   generator.build()
   generator.generateIpa()
   generator.distribute("local")
 
-  generator.generateHtml(baseURL, httpBaseURL)
+  generator.generateHtml()
   #`rm -f #{@baseDir}index.html`
-  `cd #{@baseDir};git add -A;git commit -m "r#{$revision} released"`
-  #Rake.application.invoke_task("notify")
+  generator.push()
 end
 
 task :inHouse do
-  baseURL = "https://192.168.0.166:4443"
+  baseURL = "https://www.domain.name"
   @baseDir = "/Users/amoblin/Dropbox/Apps/Marboo/Projects/MyProjects/app-dist/public/"
-  httpBaseURL = "http://192.168.0.166:2308"
   profile = "#{$projDir}/EnglishMofunShow_InHouse.mobileprovision"
   signature = "iPhone Distribution: MofunSky Technology (Beijing) Co., Ltd"
   @scheme = "mofunshowInHouse"
-  generator.setBase(baseURL, @baseDir, httpBaseURL, profile, @scheme, signature)
+  generator.setBase(baseURL, @baseDir, profile, @scheme, signature)
 
   generator.build()
   generator.generateIpa()
   generator.distribute("local")
-  generator.generateHtml(baseURL, httpBaseURL)
-  `cd #{@baseDir};git add -A;git commit -m "r#{$revision} released"`
+  generator.generateHtml()
+  generator.push()
 end
 
 task :notify do |t|

@@ -1,15 +1,14 @@
 doctype html
 html
   head
-    meta(name="viewport", content="width=320, initial-scale=1.0, user-scalable=no")
+    meta(name="viewport", content="width=320, initial-scale=1.0, user-scalable=no", charset='utf-8')
     title=title
     link(rel='stylesheet', href='main.css')
   body
-    h3 英语魔方秀内测版
-    if version
-      a(href="./customCA.cer")
-        div 刚才有提示框?安装证书来搞定
-      br
+    h3=title
+    a(href="./customCA.cer")
+      div 刚才有提示框?安装证书来搞定
+    br
     a(href="itms-services://?action=download-manifest&amp;url=#{urlRoot}#{plists[plists.length-1]}.plist")
       div 安装最新版[#{plists[plists.length-1]}]
     br
