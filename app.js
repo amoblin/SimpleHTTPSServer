@@ -4,8 +4,7 @@ var config = {
     "name": "English Mofunshow",
     "title": "英语魔方秀内测版",
     "revision": "r741",
-    "root": "https://www.domain.name:4443/",
-    "httpRoot": "https://www.domain.name:4443/http/"
+    "root": "https://www.morefunenglish.com:4443/",
 };
 
 var http = require('http');
@@ -49,18 +48,8 @@ var getClientInfo = function(req) {
 }
 
 app.get('/', function(req, res) {
-    var iosVersion = getClientInfo(req).iOS || "7.1";
-    if (iosVersion.length == 3) {
-	iosVersion += ".0";
-    }
-    config.version = semver.gte(iosVersion, '7.1.0');
-    if (config.version) {
-	config.plists = getPlists("public");
-	config.urlRoot = config.root
-    } else {
-	config.plists = getPlists("public/http");
-	config.urlRoot = config.httpRoot
-    }
+    config.plists = getPlists("public");
+    config.urlRoot = config.root
     res.render('index', config);
 });
 

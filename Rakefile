@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+$Root = "/Users/amoblin/Library/Containers/biz.Marboo/Data/Marboo_abc"
 $projDir = "/Users/amoblin/proj/amoblin/MofunSky/mofunshow"
 $name="mofunshow"
 $title = "英语魔方秀"
@@ -23,18 +24,6 @@ class Generator
     "%s/%s.ipa" % [@baseURL, self.fileName]
   end
 
-  def httpBaseDir
-    "%s/http" % @baseDir
-  end
-  def httpPlistFile
-    "%s/%s.plist" % [self.httpBaseDir, self.fileName];
-  end
-  def httpPlistURL
-    "%s/http/%s.plist" % [@baseURL, self.fileName];
-  end
-  def httpIpaURL
-    "%s/%s.ipa" % [@baseURL, self.fileName];
-  end
   def fileName
     "%s_r%s" % [`date +%F`.rstrip, self.revision]
   end
@@ -88,15 +77,12 @@ class Generator
     `sed -i .bak "s#\\#bundleVersion##{self.revision}#" #{self.plistFile}`
     `sed -i .bak "s#\\#title##{self.revision}#" #{self.plistFile}`
     `rm -f #{self.plistFile}.bak`
-    # for iOS version < 7.1
-    File.directory?File.expand_path(self.httpBaseDir) or `mkdir #{self.httpBaseDir}`
-    `sed "s##{self.ipaURL}##{self.httpIpaURL}#" #{self.plistFile} > #{self.httpPlistFile}`
   end
   def generateHtml()
     require 'json'
-    plists = Dir.entries(File.expand_path(self.baseDir)).select{|x| File.extname(x) == ".plist"}.map{|x| "%s" % File.basename(x, ".plist")}
-    params = {:urlRoot => "#{@baseURL}", :httpRoot => "#{@baseURL}", :plists => plists, :title => "#{@title}", :version => true}
-    `jade --pretty --obj '#{params.to_json}' index.jade -o #{self.baseDir}`
+    plists = Dir.entries(File.expand_path(self.baseDir)).select{|x| File.extname(x) == ".plist"}.map{|x| "%s" % File.basename(x, ".plist")}.reverse
+    params = {:urlRoot => "#{@baseURL}", :plists => plists, :title => "#{@title}", :version => true}
+    `jade --pretty --obj '#{params.to_json}' views/index.jade -o #{self.baseDir}`
   end
   def push()
     `cd #{@baseDir};git add -A;git commit -m "r#{self.revision} released"`
@@ -115,9 +101,8 @@ end
 
 task :dist do
   # Local URL
-  #baseURL = "https://dist.marboo.biz/k2k/"
   baseURL = "https://192.168.0.166:4443"
-  @baseDir = "/Users/amoblin/Dropbox/Apps/Marboo/Projects/MyProjects/app-dist/public/"
+  @baseDir = "#{$Root}/Projects/MyProjects/app-dist/public/"
   profile = "#{$projDir}/EnglishMofunShow_DEV.mobileprovision"
   signature = "iPhone Developer: Cui Guilin (CF3AN73YM2)"
 
@@ -134,7 +119,7 @@ end
 
 task :inHouse do
   baseURL = "https://www.domain.name"
-  @baseDir = "/Users/amoblin/Dropbox/Apps/Marboo/Projects/MyProjects/app-dist/public/"
+  @baseDir = "#{$Root}/Projects/MyProjects/app-dist/public/"
   profile = "#{$projDir}/EnglishMofunShow_InHouse.mobileprovision"
   signature = "iPhone Distribution: MofunSky Technology (Beijing) Co., Ltd"
   @scheme = "mofunshowInHouse"
