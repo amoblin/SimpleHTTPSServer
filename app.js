@@ -74,4 +74,4 @@ httpServer.listen(2308);
 var httpsServer = https.createServer(credentials, app);
 httpsServer.listen(4443);
 
-console.log('It works');
+console.log("Simple HTTPS Server is running...\nYour server is now available on port 4443\nCtrl+C to shut down");

@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
 
-$Root = "/Users/amoblin/Library/Containers/biz.Marboo/Data/Marboo_abc"
-$projDir = "/Users/amoblin/proj/amoblin/MofunSky/mofunshow"
-$name="mofunshow"
-$title = "英语魔方秀"
-$ipaFile = "#{$projDir}/#{$name}.ipa"
+############################################################################
+# 修改下面内容
+#
+$projDir = "/Users/amoblin/Marboo/Projects/MyProjects/iOS/MusicFeeling"
+$name = "MusicFeeling"
+$scheme = "k2k"
+$title = "傻瓜演奏家"
+$baseURL = "https://tf.marboo.biz"
+#
+# 修改结束
+############################################################################
 
+
+
+$ipaFile = "#{$projDir}/#{$scheme}.ipa"
 $templatePlistFile = "template.plist"
-
 $plistFile = "#{$projDir}/#{$name}.plist"
 
 class Generator
@@ -25,7 +33,7 @@ class Generator
   end
 
   def fileName
-    "%s_r%s" % [`date +%F`.rstrip, self.revision]
+    "%s_%s_r%s" % [self.name, `date +%F`.rstrip, self.revision]
   end
   def revision
     `defaults read #{@infoFile} CFBundleVersion`.rstrip
@@ -45,14 +53,14 @@ class Generator
     @scheme = scheme
     @signature = signature
 
-    @infoFile = "#{$projDir}/#{@scheme}/#{@scheme}-Info"
+    @infoFile = "#{$projDir}/#{@name}/#{@name}-Info"
     @bundleId = `defaults read #{@infoFile} CFBundleIdentifier`.rstrip
 
   end
   def build
-    cmd = "cd #{$projDir};xcodebuild -workspace #{$name}.xcworkspace -scheme #{@scheme} -configuration Release -sdk iphoneos7.1 -derivedDataPath . clean"
+    cmd = "cd #{$projDir};xcodebuild -workspace #{$name}.xcworkspace -scheme #{@scheme} -configuration Release -sdk iphoneos8.1 -derivedDataPath . clean"
     %x(#{cmd})
-    cmd = "cd #{$projDir};xcodebuild -workspace #{$name}.xcworkspace -scheme #{@scheme} -configuration Release -sdk iphoneos7.1 -derivedDataPath . CODE_SIGN_IDENTITY=\"#{@signature}\""
+    cmd = "cd #{$projDir};xcodebuild -workspace #{$name}.xcworkspace -scheme #{@scheme} -configuration Release -sdk iphoneos8.1 -derivedDataPath . CODE_SIGN_IDENTITY=\"#{@signature}\""
     puts `#{cmd}`
   end
   def generateIpa
@@ -62,6 +70,7 @@ class Generator
     #`cp #{$ipaFile} ~/Downloads`
   end
   def distribute(type)
+#    Dir.exits #{self.distIpaFile}  Dir.mkdir(
     `cp #{$ipaFile} #{self.distIpaFile}`
     #################
     #
@@ -101,12 +110,11 @@ end
 
 task :dist do
   # Local URL
-  baseURL = "https://192.168.0.166:4443"
-  @baseDir = "#{$Root}/Projects/MyProjects/app-dist/public/"
-  profile = "#{$projDir}/EnglishMofunShow_DEV.mobileprovision"
+  @baseDir = "%s/public/" % Dir.pwd
+  profile = "#{$projDir}/dev.mobileprovision"
+  #signature = "iPhone Developer: CUI GUILIN (2L2Z2R7J6H)"
   signature = "iPhone Developer: Cui Guilin (CF3AN73YM2)"
-
-  generator.setBase(baseURL, @baseDir, profile, $name, signature)
+  generator.setBase($baseURL, @baseDir, profile, $scheme, signature)
 
   generator.build()
   generator.generateIpa()
@@ -114,16 +122,15 @@ task :dist do
 
   generator.generateHtml()
   #`rm -f #{@baseDir}index.html`
-  generator.push()
+#  generator.push()
 end
 
 task :inHouse do
-  baseURL = "https://www.domain.name"
-  @baseDir = "#{$Root}/Projects/MyProjects/app-dist/public/"
-  profile = "#{$projDir}/EnglishMofunShow_InHouse.mobileprovision"
+  @baseDir = "%s/public/" % Dir.pwd
+  profile = "#{$projDir}/inHouse.mobileprovision"
   signature = "iPhone Distribution: MofunSky Technology (Beijing) Co., Ltd"
   @scheme = "mofunshowInHouse"
-  generator.setBase(baseURL, @baseDir, profile, @scheme, signature)
+  generator.setBase($baseURL, @baseDir, profile, @scheme, signature)
 
   generator.build()
   generator.generateIpa()
@@ -133,11 +140,7 @@ task :inHouse do
 end
 
 task :notify do |t|
-  `say -v Moira Pay attention, guys. english mofun show revision #{$revision} is released. Please upgrade.`
-  #`say -v Fiona Pay attention, guys. english mofun show revision #{$revision} is released. Please upgrade.`
-  #`say -v Sin-ji 注意啦注意啦！英语魔方秀最新测试版#{$revision}版本发布啦~请大家不要挤，有序升级`
-  #`say -v Sin-ji 注意啦注意啦！英语魔方秀最新测试版#{$revision}版本发布啦~请大家不要挤，有序升级`
-  #`say -v Sin-ji 注意啦注意啦！英语魔方秀最新测试版#{$revision}版本发布啦~请大家不要挤，有序升级`
+  `say -v Moira Pay attention, guys. new app revision #{$revision} is released. Please upgrade.`
 end
 
 task :archive do |t|

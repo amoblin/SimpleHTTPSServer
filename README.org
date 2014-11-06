@@ -4,28 +4,37 @@
 #+DATE: 2014-03-27 14:32:48
 #+OPTIONS: ^:{}
 
-* Simple Https Server
+install App For iOS 7.1 or later
 
-For iOS 7.1
-
-* HTTP Usage
-
-#+BEGIN_SRC 
-
-$ npm install
-$ node app.js
-
-#+END_SRC
-* HTTPS Usage
-
-#+BEGIN_SRC 
-
-$ npm install
+* 生成自签名证书
+#+BEGIN_SRC sh
 $ sh generateCert.sh "https域名"
-$ sudo node app.js
-
 #+END_SRC
-* Python Simple Https Server
+* 编译新版本并生成安装页
+修改Rakefile文件，设置App Xcode路径，scheme等：
+#+BEGIN_SRC rakefile
+$projDir = "/Users/amoblin/Marboo/Projects/MyProjects/iOS/MusicFeeling"
+$name = "MusicFeeling"
+$scheme = "k2k"
+$title = "傻瓜演奏家"
+$baseURL = "https://tf.marboo.biz"
+#+END_SRC
+执行编译：
+#+BEGIN_SRC sh
+rake dist
+#+END_SRC
+会生成类似下面的IPA和HTML页面：
+#+BEGIN_SRC sh
+public/MusicFeeling_2014-11-06_r135.ipa
+public/MusicFeeling_2014-11-06_r135.plist
+public/index.html
+#+END_SRC
+* Node.js动态页面版Server使用
+#+BEGIN_SRC 
+$ npm install
+$ sudo node app.js
+#+END_SRC
+* Python静态页面版Server
 #+BEGIN_SRC shell
 python main.py
 #+END_SRC

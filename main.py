@@ -13,4 +13,7 @@ import ssl
 os.chdir("public")
 httpd = BaseHTTPServer.HTTPServer(('', 4443), SimpleHTTPServer.SimpleHTTPRequestHandler)
 httpd.socket = ssl.wrap_socket(httpd.socket, certfile='../server.cer', keyfile="../server.key", server_side=True)
+print("""Simple HTTPS Server is running...
+Your server is now available on port 4443
+Ctrl+C to shut down""")
 httpd.serve_forever()
