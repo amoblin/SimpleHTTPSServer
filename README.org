@@ -4,7 +4,21 @@
 #+DATE: 2014-03-27 14:32:48
 #+OPTIONS: ^:{}
 
-install App For iOS 7.1 or later
+从iOS 7.1开始，iOS App测试安装必须走HTTPS协议，但搭建一个HTTPS服务器并不容易。
+这里的代码就能帮助快速搭建一个HTTPS服务器，并实现iOS APP的无线分发。
+
+在线演示： [[https://tf.marboo.biz]]
+
+主要功能有：
+1. 应用打包签名
+2. 无线部署安装
+3. 生成自定义证书
+
+最终效果如图：
+
+[[screenshot.png]]
+
+具体使用方法如下：
 
 * 生成自签名证书
 #+BEGIN_SRC sh
