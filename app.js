@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 var config = {
-    "name": "English Mofunshow",
-    "title": "英语魔方秀内测版",
-    "revision": "r741",
-    "root": "https://www.morefunenglish.com:4443/",
+    "name": "easyMusic",
+    "title": "傻瓜演奏家内测版",
+    "revision": "r135",
+    "root": "https://tf.marboo.biz",
 };
 
 var http = require('http');
